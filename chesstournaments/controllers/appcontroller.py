@@ -267,7 +267,7 @@ class TournamentRoundListController:
         NewTournamentView.display_tournament_list(tournaments)
         choice = NewTournamentView.choice_tournament(tournaments)
         tournament = TournamentData.load_rounds_for_tournament(choice)
-        ReportPlayer.tournament_rounds(tournament).
+        ReportPlayer.tournament_rounds(tournament)
         return ReportMenuController()
 
 
