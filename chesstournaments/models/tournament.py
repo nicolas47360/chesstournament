@@ -42,7 +42,7 @@ class Tournament:
                 while available:
                     current = available.pop(0)
                     if not self.has_played(current, available):
-                        next_player = available.pop()
+                        next_player = available.pop(0)
                         next_round.matches.append(Match(current, next_player))
                     else:
                         for player in available[1:]:

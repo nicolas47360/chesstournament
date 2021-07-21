@@ -70,6 +70,7 @@ class TournamentData:
                             birth_date=player_dict["birth_date"], gender=player_dict["gender"],
                             ranking=player_dict["ranking"])
             tournament.players.append(player)
+            return
 
     @staticmethod
     def load_rounds_for_tournament(tournament_dict):
