@@ -59,16 +59,29 @@ class TournamentData:
                            description=data["description"]) for data in tournaments_dict]
 
     @staticmethod
-    def load_tournament(tournament_dict):
+    def load_players_for_tournament(tournament_dict):
         tournament = Tournament(name=tournament_dict["name"], location=tournament_dict["location"],
                                 dated=tournament_dict["dated"], time_control=tournament_dict["time_control"],
                                 description=tournament_dict["description"])
+
         for player_id in tournament_dict["players"]:
             player_dict = PlayerData.get_player(player_id)
             player = Player(last_name=player_dict["last-name"], first_name=player_dict["first_name"],
                             birth_date=player_dict["birth_date"], gender=player_dict["gender"],
                             ranking=player_dict["ranking"])
             tournament.players.append(player)
+
+    @staticmethod
+    def load_rounds_for_tournament(tournament_dict):
+        rounds = []
+        for tournament_round in tournament_dict:
+            rounds.append(tournament_round)
+        return rounds
+
+    @staticmethod
+    def load_matches_for_tournament(tournament_dict):
+        for matches in tournament_dict("tournaments"):
+            pass
 
 
 class Feature:

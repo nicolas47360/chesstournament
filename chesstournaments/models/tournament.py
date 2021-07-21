@@ -40,9 +40,8 @@ class Tournament:
             else:
                 available = [p for p in self.players]
                 while available:
-                    current = available.pop()
-
-                    if not self.has_played(current, available[0]):
+                    current = available.pop(0)
+                    if not self.has_played(current, available):
                         next_player = available.pop()
                         next_round.matches.append(Match(current, next_player))
                     else:

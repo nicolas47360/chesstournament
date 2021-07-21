@@ -247,7 +247,7 @@ class PlayersTournamentController:
         tournaments = TournamentData.load_tournaments()
         NewTournamentView.display_tournament_list(tournaments)
         choice = NewTournamentView.choice_tournament(tournaments)
-        player = TournamentData.load_tournament(choice)
+        player = TournamentData.load_players_for_tournament(choice)
         ReportPlayer.players_for_tournament(player)
 
         return ReportMenuController()
@@ -263,10 +263,11 @@ class TournamentListController:
 class TournamentRoundListController:
 
     def __call__(self, store):
-        tournament = store["tournaments"]
-        NewTournamentView.display_tournament_list(tournament)
-        choice = NewTournamentView.choice_tournament(tournament)
-        ReportPlayer.tournament_rounds(choice)
+        tournaments = TournamentData.load_tournaments()
+        NewTournamentView.display_tournament_list(tournaments)
+        choice = NewTournamentView.choice_tournament(tournaments)
+        tournament = TournamentData.load_rounds_for_tournament(choice)
+        ReportPlayer.tournament_rounds(tournament)
         return ReportMenuController()
 
 
