@@ -1,8 +1,4 @@
-from chesstournaments.views.homemenuview import HomeTournamentView
-from chesstournaments.utils.menu import Menu
-from chesstournaments.controllers.tournamentcontroller import TournamentController
-from chesstournaments.controllers.playercontroller import CreatePlayer
-from chesstournaments.controllers.reportcontroller import Report
+
 
 
 class HomeMenuApp:

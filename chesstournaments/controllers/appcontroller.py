@@ -1,11 +1,11 @@
-from chesstournaments.views.homemenuview import HomeMenuView
-from chesstournaments.views.tournamentview import TournamentView, NewTournamentView
-from chesstournaments.views.reportview import ReportView
-from chesstournaments.views.playerview import PlayerView, PlayerOptionView
-from chesstournaments.models.player import Player
-from chesstournaments.models.tournament import Tournament
-from chesstournaments.utils.menu import Menu
-from chesstournaments.utils.utilsanddata import PlayerData, TournamentData
+from ..views.homemenuview import HomeMenuView
+from ..views.tournamentview import TournamentView, NewTournamentView, CurrentTournamentView
+from ..views.reportview import ReportView, ReportPlayer
+from ..views.playerview import PlayerView, PlayerOptionView
+from ..models.player import Player
+from ..models.tournament import Tournament
+from ..utils.menu import Menu
+from ..utils.utilsanddata import PlayerData, TournamentData
 
 
 class ApplicationController:
@@ -14,9 +14,34 @@ class ApplicationController:
         players_dict = PlayerData().players_table.all()
         players = [Player(**data) for data in players_dict]
         tournaments_dict = TournamentData().tournaments_table.all()
-        tournaments = [Tournament(**data) for data in tournaments_dict]
+        tournaments = [Tournament(name=data["name"], location=data["location"], dated=data["dated"],
+                                  time_control=data["time_control"],
+                                  description=data["description"]) for data in tournaments_dict]
         self.store = {"players": players,
-                      "tournaments": [tournaments]}
+                      "current_tournament": None,
+                      "tournaments": tournaments}
+        players = []
+        tournament = Tournament("paris", "loi", "08/07/2021", "split", "lit")
+        self.store["current_tournament"] = tournament
+        player1 = Player(1, "melin", "nicolas", "28/10/1977", "m", 325)
+        player2 = Player(2, "pap", "pol", "12/12/1988", "f", 234)
+        player3 = Player(3, "moarc", "mer", "14/02/1965", "m", 189)
+        player4 = Player(4, "herty", "kuit", "21/03/1987", "f", 214)
+        player5 = Player(5, "fric", "pol", "25/01/178", "m", 206)
+        player6 = Player(6, "tyu", "port", "12/02/1987", "f", 125)
+        player7 = Player(7, "orti", "lirt", "23/03/2001", "m", 187)
+        player8 = Player(8, "rty", "eart", "05/09/2002", 'f', 589)
+        players.append(player1)
+        players.append(player2)
+        players.append(player3)
+        players.append(player4)
+        players.append(player5)
+        players.append(player6)
+        players.append(player7)
+        players.append(player8)
+        for player in players:
+            tournament.players.append(player)
+        self.store["tournaments"].append(tournament)
 
     def start(self):
         self.controller = HomeMenuAppController()
@@ -30,9 +55,9 @@ class HomeMenuAppController:
         self.view = HomeMenuView(self.menu)
 
     def __call__(self, store):
-        self.menu.add("auto", "Tournoi", TournamentController())
-        self.menu.add("auto", "Joueur", PlayerController())
-        self.menu.add("auto", "Rapport", ReportController())
+        self.menu.add("auto", "Tournoi", TournamentMenuController())
+        self.menu.add("auto", "Joueur", PlayerMenuController())
+        self.menu.add("auto", "Rapport", ReportMenuController())
         self.menu.add("auto", "Quitter", QuitAppController())
 
         user_choice = self.view.get_user_choice()
@@ -40,16 +65,16 @@ class HomeMenuAppController:
         return user_choice.handler
 
 
-class TournamentController:
+class TournamentMenuController:
     def __init__(self):
         self.menu = Menu()
         self.view = TournamentView(self.menu)
 
     def __call__(self, store):
-        self.menu.add("auto", "Créer un nouveau tournoi", NewTournamentController())
-        self.menu.add("auto", "Ajouter les joueurs", AddPlayersController())
-        self.menu.add("auto", "Lancer le tournoi", StartTournamentController())
-        self.menu.add("auto", "Reprendre le tournoi", ResumeTournamentController())
+        self.menu.add("auto", "Créer un nouveau tournoi", CreateTournamentController())
+        self.menu.add("auto", "charger un tournoi", LoadTournamentController())
+        if store["current_tournament"] is not None:
+            self.menu.add("auto", "tournoi en cours", CurrentTournamentMenuController())
         self.menu.add("auto", "Retour à l'écran d'accueil", BackHomeMenuController())
 
         user_choice = self.view.get_user_choice()
@@ -57,37 +82,90 @@ class TournamentController:
         return user_choice.handler
 
 
-class NewTournamentController:
+class CreateTournamentController:
     def __init__(self):
-        self.view = NewTournamentView()
         self.save = TournamentData()
 
     def __call__(self, store):
-        data = self.view.create_tournament()
+
+        data = NewTournamentView.create_tournament()
         tournament = Tournament(**data)
-        store["tournaments"].append(tournament)
+        PlayerOptionView.display_players_list(store["players"])
+        players_ids = NewTournamentView.add_players_tournament()
+        for player_id in players_ids:
+            for player in store["players"]:
+                if player_id == player.identity:
+                    tournament.players.append(player)
+        store["current_tournament"] = tournament
         self.save.save_tournaments(tournament)
 
-        return TournamentController()
+        return TournamentMenuController()
 
 
-class AddPlayersController:
+class LoadTournamentController:
+
+    def __call__(self, store):
+        NewTournamentView.display_tournament_list(store["tournaments"])
+        tournament = NewTournamentView.choice_tournament(store["tournaments"])
+        store["current_tournament"] = tournament
+
+        return TournamentMenuController()
+
+
+class CurrentTournamentMenuController:
     def __init__(self):
-        self.view = PlayerOptionView()
+        self.menu = Menu()
+        self.view = TournamentView(self.menu)
 
     def __call__(self, store):
-        self.view.diplay_players_list("players")
-        return TournamentController()
+        tournament = store["current_tournament"]
+        CurrentTournamentView.display_current_tournament(tournament)
+        if not tournament.rounds:
+            self.menu.add("auto", "commencer premier round", FirstRoundController())
+            self.menu.add("auto", "quitter", TournamentMenuController())
+        if tournament.rounds:
+            self.menu.add("auto", "ajouter les points", UpdatePointController())
+            self.menu.add("auto", "nouveau round", NextRoundController())
+            self.menu.add("auto", "sauvegarder la partie", SaveGameController())
+            self.menu.add("auto", "quitter", TournamentMenuController())
+        user_choice = self.view.get_user_choice()
+
+        return user_choice.handler
 
 
-class StartTournamentController:
+class FirstRoundController:
     def __call__(self, store):
-        return HomeMenuAppController()
+        tournament = store["current_tournament"]
+        tournament.first_round()
+        return CurrentTournamentMenuController()
 
 
-class ResumeTournamentController:
+class UpdatePointController:
+
     def __call__(self, store):
-        return HomeMenuAppController()
+        tournament_round = store["current_tournament"].get_last_round()
+        wins_players = CurrentTournamentView.update_point(tournament_round)
+        for i, result in enumerate(wins_players):
+            tournament_round.matches[i].end_match(result)
+        return CurrentTournamentMenuController()
+
+
+class NextRoundController:
+
+    def __call__(self, store):
+        tournament = store["current_tournament"]
+        tournament.next_round()
+
+        return CurrentTournamentMenuController()
+
+
+class SaveGameController:
+    def __init__(self):
+        self.save = TournamentData()
+
+    def __call__(self, store):
+        tournament = store["current_tournament"]
+        self.save.save_tournaments(tournament)
 
 
 class BackHomeMenuController:
@@ -95,7 +173,7 @@ class BackHomeMenuController:
         return HomeMenuAppController()
 
 
-class PlayerController:
+class PlayerMenuController:
     def __init__(self):
         self.menu = Menu()
         self.view = PlayerView(self.menu)
@@ -112,31 +190,31 @@ class PlayerController:
 
 class CreatePlayerController:
     def __init__(self):
-        self.view = PlayerOptionView()
         self.save = PlayerData()
 
     def __call__(self, store):
-        data = self.view.create_player()
+        data = PlayerOptionView.create_player()
         player = Player(**data)
         store["players"].append(player)
         self.save.save_player_data(player)
 
-        return PlayerController()
+        return PlayerMenuController()
 
 
 class DeletePlayer:
     def __init__(self):
-        self.view = PlayerOptionView()
         self.delete = PlayerData()
 
     def __call__(self, store):
-        self.view.diplay_players_list("players")
-        self.delete.delete_player()
+        PlayerOptionView.display_players_list(store["players"])
+        player_id = PlayerOptionView.delete_player()
+        store["players"] = [p for p in store["players"] if p.identity != player_id]
+        self.delete.delete_player(player_id)
 
-        return PlayerController()
+        return PlayerMenuController()
 
 
-class ReportController:
+class ReportMenuController:
     def __init__(self):
         self.menu = Menu()
         self.view = ReportView(self.menu)
@@ -156,45 +234,51 @@ class ReportController:
 
 class PlayerListController:
     def __init__(self):
-        self.view = PlayerOptionView()
         self.data = PlayerData()
 
     def __call__(self, store):
 
-        self.view.diplay_players_list(store["players"])
-
-        return ReportController()
+        ReportPlayer.player_view(store["players"])
+        return ReportMenuController()
 
 
 class PlayersTournamentController:
     def __call__(self, store):
-        return ReportController()
+        tournaments = TournamentData.load_tournaments()
+        NewTournamentView.display_tournament_list(tournaments)
+        choice = NewTournamentView.choice_tournament(tournaments)
+        player = TournamentData.load_tournament(choice)
+        ReportPlayer.players_for_tournament(player)
+
+        return ReportMenuController()
 
 
 class TournamentListController:
     def __call__(self, store):
-        return ReportController()
+        tournaments = TournamentData.load_tournaments()
+        NewTournamentView.display_tournament_list(tournaments)
+        return ReportMenuController()
 
 
 class TournamentRoundListController:
+
     def __call__(self, store):
-        return ReportController()
+        tournament = store["tournaments"]
+        NewTournamentView.display_tournament_list(tournament)
+        choice = NewTournamentView.choice_tournament(tournament)
+        ReportPlayer.tournament_rounds(choice)
+        return ReportMenuController()
 
 
 class TournamentMatchListController:
     def __call__(self, store):
-        return ReportController()
+        tournament = store["tournaments"]
+        NewTournamentView.display_tournament_list(tournament)
+        choice = NewTournamentView.choice_tournament(tournament)
+        ReportPlayer.tournament_matches(choice)
+        return ReportMenuController()
 
 
 class QuitAppController:
     def __call__(self, store):
         print("-------FIN DE L'APPLICTAION-------")
-
-
-
-
-
-
-
-
-

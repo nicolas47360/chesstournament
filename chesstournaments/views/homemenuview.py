@@ -3,7 +3,7 @@ class HomeMenuView:
         self.menu = menu
 
     def _display_menu(self):
-        print("-------PRÊT A GÉRER VOS TOURNOIS------")
+        print("-------PRÊT A GÉRER VOS TOURNOIS------\n")
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
 

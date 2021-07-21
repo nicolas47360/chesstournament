@@ -1,5 +1,5 @@
-import datetime
 from chesstournaments.utils.utilsanddata import Feature
+
 
 class PlayerView:
 
@@ -7,7 +7,7 @@ class PlayerView:
         self.menu = menu
 
     def _display_menu(self):
-        print("-------TOURNOI-------")
+        print("-------TOURNOI-------\n")
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
 
@@ -21,34 +21,33 @@ class PlayerView:
             if choice in self.menu:
                 return self.menu[choice]
 
+
 class PlayerOptionView:
 
-    def __init__(self):
-        self.feature = Feature()
+    @staticmethod
+    def create_player():
+        print("--------Nouveau joueur-------\n")
+        identity = Feature.for_int("entrer un chiffre: ")
+        last_name = Feature.for_string("Veuillez entrer le nom : ")
+        first_name = Feature.for_string("Veuillez entrer votre prénom : ")
+        birth_date = Feature.birth_date("veuillez entrer la date de naissasnce dd/mm/yyyy: ")
+        gender = Feature.gender("Veuillez entrer le sexe (f/m) : ")
+        ranking = Feature.ranking("Veuillez entrer le classement: ")
 
-    def create_player(self):
-        print("--------Nouveau joueur-------")
-        last_name = self.feature.for_string("Veuillez entrer le nom : ")
-        first_name = self.feature.for_string("Veuillez entrer votre prénom : ")
-        birth_date = self.feature.birth_date("veuillez entrer la date de naissasnce dd/mm/yyyy: ")
-        gender = self.feature.gender("Veuillez entrer le sexe (f/m) : ")
-        ranking = self.feature.ranking("Veuillez entrer le classement: ")
-
-        return {"last_name": last_name,  "first_name": first_name, "birth_date": birth_date,
+        return {"identity": identity, "last_name": last_name,  "first_name": first_name, "birth_date": birth_date,
                 "gender": gender, "ranking": ranking}
 
-    def delete_player(self):
-        print("--------supprimer un joueur---------")
-        last_name = input("Nom du joueur : ")
-        first_name = input("prenom du joueur : ")
-        return last_name, first_name
+    @staticmethod
+    def delete_player():
+        print("--------supprimer un joueur---------\n")
+        identity = Feature.for_int("choisir un joueur par son ID: ")
+        return identity
 
-
-    def diplay_players_list(self, players):
+    @staticmethod
+    def display_players_list(players):
         print("--------liste des joueurs--------\n")
 
-        for player in players:
-            print(("nom :{}, prenom :{}, age :{}, sexe  :{}, rang :{}").format(player.last_name,
-                  player.first_name, player.birth_date, player.gender, player.ranking))
-
+        for p in players:
+            print("ID: {} nom: {}, prenom: {}, age: {}, sexe : {}, rang: {}".format(p.identity,
+                  p.last_name, p.first_name, p.birth_date, p.gender, p.ranking))
         print("\n")
