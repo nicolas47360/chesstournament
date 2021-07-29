@@ -24,6 +24,12 @@ class PlayerData:
         self.players_table.remove(where("identity") == int(identity))
 
     @staticmethod
+    def load_player():
+        players_dict = PlayerData().players_table.all()
+        players = [Player(**data) for data in players_dict]
+        return players
+
+    @staticmethod
     def get_player(player_id):
         players_dict = PlayerData().players_table.all()
         for player in players_dict:
@@ -59,23 +65,32 @@ class TournamentData:
                            description=data["description"]) for data in tournaments_dict]
 
     @staticmethod
-    def load_players_for_tournament(tournament_dict):
-        tournament = Tournament(name=tournament_dict["name"], location=tournament_dict["location"],
-                                dated=tournament_dict["dated"], time_control=tournament_dict["time_control"],
-                                description=tournament_dict["description"])
+    def load_tournament():
+        tournaments = []
+        for tournament_dict in TournamentData().tournaments_table.all():
+            tournament = Tournament(name=tournament_dict["name"],
+                                    location=tournament_dict["location"],
+                                    dated=tournament_dict["dated"],
+                                    time_control=tournament_dict["time_control"],
+                                    description=tournament_dict["description"])
+            tournaments.append(tournament)
+            TournamentData.load_players(tournament, tournament_dict)
+            TournamentData.load_rounds(tournament)
 
-        for player_id in tournament_dict["players"]:
-            player_dict = PlayerData.get_player(player_id)
-            player = Player(last_name=player_dict["last-name"], first_name=player_dict["first_name"],
-                            birth_date=player_dict["birth_date"], gender=player_dict["gender"],
-                            ranking=player_dict["ranking"])
+        return tournaments
+
+    @staticmethod
+    def load_players(tournament, player_ids):
+        for player_id in player_ids:
+            player = PlayerData.get_player(player_id)
             tournament.players.append(player)
 
 
+
     @staticmethod
-    def load_rounds_for_tournament(tournament_dict):
+    def load_rounds(tournament_rounds):
         rounds = []
-        for tournament_round in tournament_dict:
+        for tournament_round in tournament_rounds:
             rounds.append(tournament_round)
         return rounds
 

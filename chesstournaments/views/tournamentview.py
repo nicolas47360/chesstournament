@@ -91,8 +91,6 @@ class CurrentTournamentView:
                     elif match.winner == 0:
                         print(f" le joueur {match.player1} et le joueur {match.player2} sont equalités\n")
 
-
-
     @staticmethod
     def update_point(tournament_round):
         print("--------Points de la partie--------\n")

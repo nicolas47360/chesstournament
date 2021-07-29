@@ -32,25 +32,17 @@ class Tournament:
         next_round = Round(datetime.date.today())
         self.players.sort(key=lambda p: (p.score, p.ranking), reverse=True)
 
-        for i in range(0, 7, 2):
-            player1 = self.players[i]
-            player2 = self.players[i + 1]
-            if not self.has_played(player1, player2):
-                next_round.matches.append(Match(player1, player2))
-            else:
-                available = [p for p in self.players]
-                while available:
-                    current = available.pop(0)
-                    if not self.has_played(current, available):
-                        next_player = available.pop()
-                        next_round.matches.append(Match(current, next_player))
-                    else:
-                        for player in available[1:]:
-                            if not self.has_played(current, player):
-                                next_round.matches.append(Match(current, next))
-                                break
+        available = [p for p in self.players]
+        while available:
+            current = available.pop(0)
+            for player in available:
+                if not self.has_played(current, player) or len(available) == 1:
+                    next_round.matches.append(Match(current, player))
+                    available = [i for i in available if i != player]
+                    break
+                else:
+                    continue
         self.rounds.append(next_round)
-
 
     def get_last_round(self):
         if self.rounds or len(self.rounds) == 4:
@@ -66,11 +58,6 @@ class Tournament:
                     return True
         return False
 
-    def search_opponent(self, player):
-        for opponent in self.players:
-            if player != opponent and not self.has_played(opponent, player):
-                return opponent
-
     @classmethod
     def from_dict(cls, tournaments_dict):
         tournament = cls(name=tournaments_dict["name"], location=tournaments_dict["location"],
@@ -84,9 +71,4 @@ class Tournament:
     def __repr__(self):
         return f"{self.name} {self.location} {self.time_control} {self.description} {self.dated}"
 
-    def get_available_players_for_round(self, tournament_round):
-        available_players = []
-        for player in self.players:
-            if player not in tournament_round.players:
-                available_players.append(player)
-        return available_players
+

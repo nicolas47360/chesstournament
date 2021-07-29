@@ -14,3 +14,6 @@ class Player:
 
     def update_points(self, point):
         self.score += point
+
+    def __eq__(self, other):
+        return self.identity == other.identity

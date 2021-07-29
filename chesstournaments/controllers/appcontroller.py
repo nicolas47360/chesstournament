@@ -233,22 +233,19 @@ class ReportMenuController:
 
 
 class PlayerListController:
-    def __init__(self):
-        self.data = PlayerData()
 
     def __call__(self, store):
-
-        ReportPlayer.player_view(store["players"])
+        player = PlayerData.load_player()
+        ReportPlayer.player_view(player)
         return ReportMenuController()
 
 
 class PlayersTournamentController:
     def __call__(self, store):
-        tournaments = TournamentData.load_tournaments()
+        tournaments = TournamentData.load_tournament()
         NewTournamentView.display_tournament_list(tournaments)
-        choice = NewTournamentView.choice_tournament(tournaments)
-        player = TournamentData.load_players_for_tournament(choice)
-        ReportPlayer.players_for_tournament(player)
+        NewTournamentView.choice_tournament(tournaments)
+        ReportPlayer.players_for_tournament(tournaments)
 
         return ReportMenuController()
 
@@ -263,19 +260,19 @@ class TournamentListController:
 class TournamentRoundListController:
 
     def __call__(self, store):
-        tournaments = TournamentData.load_tournaments()
+        tournaments = TournamentData.load_tournament()
         NewTournamentView.display_tournament_list(tournaments)
         choice = NewTournamentView.choice_tournament(tournaments)
-        tournament = TournamentData.load_rounds_for_tournament(choice)
+        tournament = TournamentData.load_rounds(choice)
         ReportPlayer.tournament_rounds(tournament)
         return ReportMenuController()
 
 
 class TournamentMatchListController:
     def __call__(self, store):
-        tournament = store["tournaments"]
-        NewTournamentView.display_tournament_list(tournament)
-        choice = NewTournamentView.choice_tournament(tournament)
+        tournaments = TournamentData.load_tournaments()
+        NewTournamentView.display_tournament_list(tournaments)
+        choice = NewTournamentView.choice_tournament(tournaments)
         ReportPlayer.tournament_matches(choice)
         return ReportMenuController()
 
