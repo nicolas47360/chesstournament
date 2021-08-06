@@ -1,29 +1,28 @@
-from ..views.tournamentview import TournamentView, NewTournamentView
+from ..views.tournamentview import TournamentView, NewTournamentView, CurrentTournamentView
 from ..views.playerview import PlayerOptionView
 from ..utils.utilsanddata import TournamentData
 from ..utils.menu import Menu
 from ..models.tournament import Tournament
 from . import appcontroller
 
-
-class TournamentController:
+class TournamentMenuController:
     def __init__(self):
         self.menu = Menu()
         self.view = TournamentView(self.menu)
 
     def __call__(self, store):
-        self.menu.add("auto", "Créer un nouveau tournoi", NewTournamentController())
+        self.menu.add("auto", "Créer un nouveau tournoi", CreateTournamentController())
         self.menu.add("auto", "charger un tournoi", LoadTournamentController())
-        if store["cuurent_tournament"] != None:
-            self.menu.add("auto", "tournoi en cours", CurrentTournamentController())
-        self.menu.add("auto", "Retour à l'écran d'accueil", appcontroller.BackHomeMenuController())
+        if store["current_tournament"] is not None:
+            self.menu.add("auto", "tournoi en cours", CurrentTournamentMenuController())
+        self.menu.add("auto", "Retour à l'écran d'accueil", appcontroller.HomeMenuAppController())
 
         user_choice = self.view.get_user_choice()
 
         return user_choice.handler
 
 
-class NewTournamentController:
+class CreateTournamentController:
     def __init__(self):
         self.save = TournamentData()
 
@@ -40,16 +39,72 @@ class NewTournamentController:
         store["current_tournament"] = tournament
         self.save.save_tournaments(tournament)
 
-        return TournamentController()
+        return TournamentMenuController()
 
 
 class LoadTournamentController:
-    def __init__(self):
-        pass
 
     def __call__(self, store):
         NewTournamentView.display_tournament_list(store["tournaments"])
         tournament = NewTournamentView.choice_tournament(store["tournaments"])
         store["current_tournament"] = tournament
 
-        return TournamentController()
+        return TournamentMenuController()
+
+
+class CurrentTournamentMenuController:
+    def __init__(self):
+        self.menu = Menu()
+        self.view = TournamentView(self.menu)
+
+    def __call__(self, store):
+        tournament = store["current_tournament"]
+        CurrentTournamentView.display_current_tournament(tournament)
+        if not tournament.rounds:
+            self.menu.add("auto", "commencer premier round", FirstRoundController())
+            self.menu.add("auto", "quitter", TournamentMenuController())
+        if tournament.rounds:
+            self.menu.add("auto", "ajouter les points", UpdatePointController())
+            self.menu.add("auto", "nouveau round", NextRoundController())
+            self.menu.add("auto", "sauvegarder la partie", SaveGameController())
+            self.menu.add("auto", "quitter", TournamentMenuController())
+        user_choice = self.view.get_user_choice()
+
+        return user_choice.handler
+
+
+class FirstRoundController:
+    def __call__(self, store):
+        tournament = store["current_tournament"]
+        tournament.first_round()
+        return CurrentTournamentMenuController()
+
+
+class UpdatePointController:
+
+    def __call__(self, store):
+        tournament_round = store["current_tournament"].get_last_round()
+        wins_players = CurrentTournamentView.update_point(tournament_round)
+        for i, result in enumerate(wins_players):
+            tournament_round.matches[i].end_match(result)
+        return CurrentTournamentMenuController()
+
+
+class NextRoundController:
+
+    def __call__(self, store):
+        tournament = store["current_tournament"]
+        tournament.next_round()
+
+        return CurrentTournamentMenuController()
+
+
+class SaveGameController:
+    def __init__(self):
+        self.save = TournamentData()
+
+    def __call__(self, store):
+        tournament = store["current_tournament"]
+        self.save.save_tournaments(tournament)
+
+

@@ -2,7 +2,7 @@ from ..utils.menu import Menu
 from ..utils.utilsanddata import PlayerData
 from ..views.playerview import PlayerView, PlayerOptionView
 from ..models.player import Player
-from .import appcontroller
+from . import appcontroller
 
 
 class PlayerMenuController:
@@ -13,7 +13,7 @@ class PlayerMenuController:
     def __call__(self, store):
         self.menu.add("auto", "Créer un nouveau joueur", CreatePlayerController())
         self.menu.add("auto", "Supprimer un joueur", DeletePlayer())
-        self.menu.add("auto", "Retour à l'écran d'accueil", appcontroller.BackHomeMenuController())
+        self.menu.add("auto", "Retour à l'écran d'accueil", appcontroller.HomeMenuAppController())
 
         user_choice = self.view.get_user_choice()
 

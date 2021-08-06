@@ -33,6 +33,9 @@ class Match:
         return {"player1": self.player1.identity, "player2": self.player2.identity,
                 "start_match": str(self.start_date), "end_match": str(self.end_date)}
 
+    def __repr__(self):
+        return f" {self.player1} vs {self.player2} "
+
 
 
 

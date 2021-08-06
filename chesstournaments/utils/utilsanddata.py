@@ -2,6 +2,8 @@ import datetime
 from tinydb import TinyDB, where
 from ..models.player import Player
 from ..models.tournament import Tournament
+from ..models.round import Round
+from ..models.match import Match
 
 
 class PlayerData:
@@ -32,9 +34,9 @@ class PlayerData:
     @staticmethod
     def get_player(player_id):
         players_dict = PlayerData().players_table.all()
-        for player in players_dict:
-            if player["identity"] == player_id:
-                return player
+        for player_dict in players_dict:
+            if player_dict["identity"] == player_id:
+                return Player(**player_dict)
 
 
 class TournamentData:
@@ -58,46 +60,36 @@ class TournamentData:
 
     @staticmethod
     def load_tournaments():
-
-        tournaments_dict = TournamentData().tournaments_table.all()
-        return [Tournament(name=data["name"], location=data["location"], dated=data["dated"],
-                           time_control=data["time_control"],
-                           description=data["description"]) for data in tournaments_dict]
-
-    @staticmethod
-    def load_tournament():
         tournaments = []
         for tournament_dict in TournamentData().tournaments_table.all():
             tournament = Tournament(name=tournament_dict["name"],
                                     location=tournament_dict["location"],
                                     dated=tournament_dict["dated"],
                                     time_control=tournament_dict["time_control"],
+                                    round_number=tournament_dict["round_number"],
                                     description=tournament_dict["description"])
             tournaments.append(tournament)
-            TournamentData.load_players(tournament, tournament_dict)
-            TournamentData.load_rounds(tournament)
+            TournamentData.load_players(tournament, tournament_dict.get("players", []))
+            TournamentData.load_rounds(tournament, tournament_dict.get("rounds", []))
 
         return tournaments
 
     @staticmethod
     def load_players(tournament, player_ids):
         for player_id in player_ids:
-            player = PlayerData.get_player(player_id)
-            tournament.players.append(player)
-
-
+            tournament.players.append(PlayerData.get_player(player_id))
 
     @staticmethod
-    def load_rounds(tournament_rounds):
-        rounds = []
+    def load_rounds(tournament, tournament_rounds):
         for tournament_round in tournament_rounds:
-            rounds.append(tournament_round)
-        return rounds
-
-    @staticmethod
-    def load_matches_for_tournament(tournament_dict):
-        for matches in tournament_dict("tournaments"):
-            pass
+            turn = Round(start_dated=tournament_round["start_round"], name=tournament_round["name"])
+            for match_dict in tournament_round.get("matches", []):
+                match = Match(PlayerData.get_player(match_dict["player1"]),
+                              PlayerData.get_player(match_dict["player2"]))
+                match.start_date = match_dict["start_match"]
+                match.end_date = match_dict["end_match"]
+                turn.matches.append(match)
+            tournament.rounds.append(turn)
 
 
 class Feature:

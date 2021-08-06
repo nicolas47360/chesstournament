@@ -3,9 +3,10 @@ import datetime
 
 class Round:
 
-    def __init__(self, start_dated):
+    def __init__(self, start_dated, name):
 
         self.matches = []
+        self.name = name
         self.start_dated = start_dated
         self.end_dated = None
 
@@ -21,5 +22,12 @@ class Round:
         return all(match.finished() for match in self.matches)
 
     def round_dict(self):
-        return {"matches": [match.to_dict() for match in self.matches], "start_round": str(self.start_dated),
-                "end_round": str(self.end_dated)}
+        return {"matches": [match.to_dict() for match in self.matches],
+                "name": self.name,
+                "start_round": str(self.start_dated) if self.start_dated else None,
+                "end_round": str(self.end_dated) if self.end_dated else None}
+
+    def __repr__(self):
+        return f" {self.start_dated} {self.end_dated or 'pas encore fini'} "
+
+
