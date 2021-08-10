@@ -7,16 +7,16 @@ Cloner le repository à partir de l'adresse:
 'https://github.com/nicolas47360/chesstournament.git'
 
 Créer un environement virtuel:<br>
-'python -m venv env'
+'''python -m venv env'''
 
 Activer votre environement virtuel:<br>
-'source env/bin/activate'
+'''source env/bin/activate'''
 
 Installer les packages à partir du fichier requirements.txt:<br>
-'pip install -r requirements.txt'
+'''pip install -r requirements.txt'''
 
 Lancer le script:<br>
-'python -m chesstournaments.main'
+'''python -m chesstournaments.main'''
 
 ## Utilisation:
 ##Menu d'accueil
@@ -45,7 +45,7 @@ Vous obtiendrez l'ensemble des informations:
 
 ##Génerer un rapport flake8-html
 Veuillez entrer la ligne de code suivante dans votre terminal:<br>
-'flake8 --format=html --htmldir=flake-report'
+'''flake8 --format=html --htmldir=flake-report'''
 
  
 
