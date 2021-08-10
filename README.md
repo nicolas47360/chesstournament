@@ -1,8 +1,7 @@
 # Chess Tournament
 
-
 Application permettant la création et la gestion d'un tournoi d'echec hors ligne.
-## Notice d' utilisation
+## Notice d'utilisation
 ### Installation:
 Cloner le repository à partir de l'adresse:
 https://github.com/nicolas47360/chesstournament.git
