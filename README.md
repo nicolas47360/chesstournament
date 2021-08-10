@@ -1,8 +1,8 @@
 #Chess Tournament
 
 Application permettant la création et la gestion d'un tournoi d'echec hors ligne.
-## Notice d' utilisation
-### Installation:
+# Notice d' utilisation
+## Installation:
 Cloner le repository à partir de l'adresse:
 'https://github.com/nicolas47360/chesstournament.git'
 
@@ -18,8 +18,8 @@ Installer les packages à partir du fichier requirements.txt:<br>
 Lancer le script:<br>
 'python -m chesstournaments.main'
 
-### Utilisation:
-####Menu d'accueil
+## Utilisation:
+##Menu d'accueil
 1. Tournoi:<br>
     *Vous permettra de créer un nouveau tournoi et de charger un tournoi après sa création ou si celui-ci fut sauvegarder.*
 
@@ -36,14 +36,14 @@ Vous obtiendrez l'ensemble des informations:
 - *la liste de tous les tours et matchs d'un tournoi*
 4. Quitter
 
-####Execution d'un Tournoi
+###Execution d'un Tournoi
 - *Charger un tournoi par son nom.*
 - *Lancer le tournoi en séléctionant "tournoi en cours"*
 - *Commencer le "premier round" si vous venez de créer un tournoi ou "nouveau round" si vous reprennez un tournoi*
 - *"Ajouter les points" lorsque les matchs sont finis*
 - *continuer les rounds ou sauvegarder*
 
-###Génerer un rapport flake8-html
+##Génerer un rapport flake8-html
 Veuillez entrer la ligne de code suivante dans votre terminal:<br>
 'flake8 --format=html --htmldir=flake-report'
 
