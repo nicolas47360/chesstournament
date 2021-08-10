@@ -35,6 +35,7 @@ class HomeMenuAppController:
 
         return user_choice.handler
 
+
 class QuitAppController:
     def __call__(self, store):
         print("-------FIN DE L'APPLICTAION-------")

@@ -9,20 +9,7 @@ class HomeMenuView:
 
     def get_user_choice(self):
         while True:
-            #afficher menu
             self._display_menu()
-            #demander a l'utilisateur de faire un choix
             choice = input(">> ")
-            #valider choix de l'utilisateur
             if choice in self.menu:
                 return self.menu[choice]
-
-
-
-
-
-
-
-
-
-

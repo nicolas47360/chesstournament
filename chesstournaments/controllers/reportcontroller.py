@@ -10,12 +10,15 @@ class ReportMenuController:
         self.view = ReportView(self.menu)
 
     def __call__(self, store):
-        self.menu.add("auto", "Liste de tous les joueurs", PlayerListController())
-        self.menu.add("auto", "Joueurs d'un tournoi", PlayersTournamentController())
+        self.menu.add("auto", "Liste de tous les joueurs",
+                      PlayerListController())
+        self.menu.add("auto", "Joueurs d'un tournoi",
+                      PlayersTournamentController())
         self.menu.add("auto", "Liste des Tournois", TournamentListController())
         self.menu.add("auto", "Liste de tous les tours et matchs d'un tournoi",
                       TournamentRoundListController())
-        self.menu.add("auto", "Retour à l'écran d'accueil", appcontroller.HomeMenuAppController())
+        self.menu.add("auto", "Retour à l'écran d'accueil",
+                      appcontroller.HomeMenuAppController())
 
         user_choice = self.view.get_user_choice()
 

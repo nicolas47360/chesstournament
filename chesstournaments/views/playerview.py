@@ -13,11 +13,8 @@ class PlayerView:
 
     def get_user_choice(self):
         while True:
-            #afficher menu
             self._display_menu()
-            #demander a l'utilisateur de faire un choix
             choice = input(">> ")
-            #valider choix de l'utilisateur
             if choice in self.menu:
                 return self.menu[choice]
 
@@ -30,11 +27,13 @@ class PlayerOptionView:
         identity = Feature.for_int("entrer un chiffre: ")
         last_name = Feature.for_string("Veuillez entrer le nom : ")
         first_name = Feature.for_string("Veuillez entrer votre prénom : ")
-        birth_date = Feature.birth_date("veuillez entrer la date de naissasnce dd/mm/yyyy: ")
+        birth_date = Feature.birth_date("veuillez entrer la date "
+                                        "de naissasnce dd/mm/yyyy: ")
         gender = Feature.gender("Veuillez entrer le sexe (f/m) : ")
         ranking = Feature.ranking("Veuillez entrer le classement: ")
 
-        return {"identity": identity, "last_name": last_name,  "first_name": first_name, "birth_date": birth_date,
+        return {"identity": identity, "last_name": last_name,
+                "first_name": first_name, "birth_date": birth_date,
                 "gender": gender, "ranking": ranking}
 
     @staticmethod
@@ -48,6 +47,7 @@ class PlayerOptionView:
         print("--------liste des joueurs--------\n")
 
         for p in players:
-            print("ID: {} nom: {}, prenom: {}, age: {}, sexe : {}, rang: {}".format(p.identity,
-                  p.last_name, p.first_name, p.birth_date, p.gender, p.ranking))
+            print(f"ID: {p.identity} nom: {p.last_name} "
+                  f" prenom: {p.first_name}  age: {p.birth_date} "
+                  f" sexe : {p.gender}  rang: {p.ranking}")
         print("\n")

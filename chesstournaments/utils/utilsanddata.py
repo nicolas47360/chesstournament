@@ -45,7 +45,7 @@ class TournamentData:
     tournaments_table = db.table("tournaments")
 
     def save_tournaments(self, tournament):
-
+        self.tournaments_table.remove(where("name") == tournament.name)
         self.tournaments_table.insert(
             {"name": tournament.name,
              "location": tournament.location,
@@ -54,23 +54,26 @@ class TournamentData:
              "round_number": tournament.round_number,
              "description": tournament.description,
              "players": [player.identity for player in tournament.players],
-             "rounds": [tournament_round.round_dict() for tournament_round in tournament.rounds]
+             "rounds": [tournament_round.round_dict()
+                        for tournament_round in tournament.rounds]
              }
         )
 
     @staticmethod
     def load_tournaments():
         tournaments = []
-        for tournament_dict in TournamentData().tournaments_table.all():
-            tournament = Tournament(name=tournament_dict["name"],
-                                    location=tournament_dict["location"],
-                                    dated=tournament_dict["dated"],
-                                    time_control=tournament_dict["time_control"],
-                                    round_number=tournament_dict["round_number"],
-                                    description=tournament_dict["description"])
+        for t_dict in TournamentData().tournaments_table.all():
+            tournament = Tournament(name=t_dict["name"],
+                                    location=t_dict["location"],
+                                    dated=t_dict["dated"],
+                                    time_control=t_dict["time_control"],
+                                    round_number=t_dict["round_number"],
+                                    description=t_dict["description"])
             tournaments.append(tournament)
-            TournamentData.load_players(tournament, tournament_dict.get("players", []))
-            TournamentData.load_rounds(tournament, tournament_dict.get("rounds", []))
+            TournamentData.load_players(tournament,
+                                        t_dict.get("players", []))
+            TournamentData.load_rounds(tournament,
+                                       t_dict.get("rounds", []))
 
         return tournaments
 
@@ -82,10 +85,13 @@ class TournamentData:
     @staticmethod
     def load_rounds(tournament, tournament_rounds):
         for tournament_round in tournament_rounds:
-            turn = Round(start_dated=tournament_round["start_round"], name=tournament_round["name"])
+            turn = Round(start_dated=tournament_round["start_round"],
+                         name=tournament_round["name"]
+                         )
             for match_dict in tournament_round.get("matches", []):
                 match = Match(PlayerData.get_player(match_dict["player1"]),
                               PlayerData.get_player(match_dict["player2"]))
+                match.winner = match_dict["winner"]
                 match.start_date = match_dict["start_match"]
                 match.end_date = match_dict["end_match"]
                 turn.matches.append(match)

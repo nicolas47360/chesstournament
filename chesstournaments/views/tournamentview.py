@@ -30,20 +30,26 @@ class NewTournamentView:
         location = input("Veuillez entrer le lieu du tournoi : ")
         dated = str(datetime.date.today())
         print(dated)
-        time_control = Feature.time_control("Veuillez entrer le type de partie (split, blitz, rapide): ")
-        round_number = Feature.for_int("Veuillez entrer le nombre de rondes : ")
+        time_control = Feature.time_control("Veuillez entrer "
+                                            "le type de partie "
+                                            "(split, blitz, rapide): ")
+        round_number = Feature.for_int("Veuillez entrer"
+                                       " le nombre de rondes : ")
         description = input("Veuillez entrer les informations : ")
 
-        return {"name": name, "location": location, "dated": dated, "time_control": time_control,
+        return {"name": name, "location": location,
+                "dated": dated, "time_control": time_control,
                 "round_number": round_number,  "description": description}
 
     @staticmethod
     def display_tournament_list(tournaments):
         print("--------liste des tournois--------\n")
         for tournament in tournaments:
-            print("Nom :{}, lieu :{}, date :{}, type de partie :{}, nombre de round :{}, desription :{}".
-                  format(tournament.name, tournament.location, tournament.dated,
-                         tournament.time_control, tournament.round_number, tournament.description))
+            print(f"Nom :{tournament.name}  lieu :{tournament.location} "
+                  f" date :{tournament.dated}  "
+                  f"type de partie :{tournament.time_control} "
+                  f" nombre de round :{tournament.round_number} "
+                  f" desription :{tournament.description}")
         print("\n")
 
     @staticmethod
@@ -51,7 +57,8 @@ class NewTournamentView:
         print("--------Choisir 8 joueurs dans la liste---------")
         choices_ids = []
         for i in range(8):
-            choices_ids.append(Feature.for_int("choisir une ID dans la liste:"))
+            choices_ids.append(Feature.for_int
+                               ("choisir une ID dans la liste:"))
 
         return choices_ids
 
@@ -72,24 +79,29 @@ class CurrentTournamentView:
         print(f"date du tournoi: {tournament.dated}")
         print(f"type de partie du tournoi: {tournament.time_control}")
         print(f"nombre de ronde du tournoi: {tournament.round_number}")
-        print(f"descritpion du tournoi: {tournament.description}")
-        print(f"joueurs :{tournament.players}")
-        print("rounds: ")
+        print(f"descritpion du tournoi: {tournament.description}\n")
+        print("--------joueurs------")
+        for p, players in enumerate(tournament.players):
+            print(f"joueur {p + 1}: {players}")
+        print("\n")
+
+        print("------rounds------")
         if not tournament.rounds:
             print("Pas encore de round commencé")
         else:
-            i = 1
             for i, tournament_round in enumerate(tournament.rounds):
-                print(f"Round {i} {tournament_round.start_dated}")
-                i += 1
+                print(f"Round {i + 1} {tournament_round.start_dated}\n")
+
                 for j, match in enumerate(tournament_round.matches):
-                    print(f"{j}. {match.player1} VS {match.player2}")
+                    print(f"Match {j + 1}: {match.player1} VS {match.player2}")
                     if match.winner == 1:
-                        print(f" le gagnant est le joueur {match.player1}\n")
+                        print(f" le gagnant est le joueur {match.player1}")
                     elif match.winner == 2:
-                        print(f" le gagnant est le joueur {match.player2}\n")
+                        print(f" le gagnant est le joueur {match.player2}")
                     elif match.winner == 0:
-                        print(f" le joueur {match.player1} et le joueur {match.player2} sont equalités\n")
+                        print(f" le joueur {match.player1} et le joueur "
+                              f"{match.player2} sont equalités")
+                print("\n")
 
     @staticmethod
     def update_point(tournament_round):

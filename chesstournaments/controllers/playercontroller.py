@@ -11,9 +11,11 @@ class PlayerMenuController:
         self.view = PlayerView(self.menu)
 
     def __call__(self, store):
-        self.menu.add("auto", "Créer un nouveau joueur", CreatePlayerController())
+        self.menu.add("auto", "Créer un nouveau joueur",
+                      CreatePlayerController())
         self.menu.add("auto", "Supprimer un joueur", DeletePlayer())
-        self.menu.add("auto", "Retour à l'écran d'accueil", appcontroller.HomeMenuAppController())
+        self.menu.add("auto", "Retour à l'écran d'accueil",
+                      appcontroller.HomeMenuAppController())
 
         user_choice = self.view.get_user_choice()
 
@@ -40,7 +42,8 @@ class DeletePlayer:
     def __call__(self, store):
         PlayerOptionView.display_players_list(store["players"])
         player_id = PlayerOptionView.delete_player()
-        store["players"] = [p for p in store["players"] if p.identity != player_id]
+        store["players"] = [p for p in store["players"]
+                            if p.identity != player_id]
         self.delete.delete_player(player_id)
 
         return PlayerMenuController()

@@ -1,9 +1,11 @@
-from ..views.tournamentview import TournamentView, NewTournamentView, CurrentTournamentView
+from ..views.tournamentview import TournamentView, \
+    NewTournamentView, CurrentTournamentView
 from ..views.playerview import PlayerOptionView
 from ..utils.utilsanddata import TournamentData
 from ..utils.menu import Menu
 from ..models.tournament import Tournament
 from . import appcontroller
+
 
 class TournamentMenuController:
     def __init__(self):
@@ -11,11 +13,14 @@ class TournamentMenuController:
         self.view = TournamentView(self.menu)
 
     def __call__(self, store):
-        self.menu.add("auto", "Créer un nouveau tournoi", CreateTournamentController())
+        self.menu.add("auto", "Créer un nouveau tournoi",
+                      CreateTournamentController())
         self.menu.add("auto", "charger un tournoi", LoadTournamentController())
         if store["current_tournament"] is not None:
-            self.menu.add("auto", "tournoi en cours", CurrentTournamentMenuController())
-        self.menu.add("auto", "Retour à l'écran d'accueil", appcontroller.HomeMenuAppController())
+            self.menu.add("auto", "tournoi en cours",
+                          CurrentTournamentMenuController())
+        self.menu.add("auto", "Retour à l'écran d'accueil",
+                      appcontroller.HomeMenuAppController())
 
         user_choice = self.view.get_user_choice()
 
@@ -61,12 +66,15 @@ class CurrentTournamentMenuController:
         tournament = store["current_tournament"]
         CurrentTournamentView.display_current_tournament(tournament)
         if not tournament.rounds:
-            self.menu.add("auto", "commencer premier round", FirstRoundController())
+            self.menu.add("auto", "commencer premier round",
+                          FirstRoundController())
             self.menu.add("auto", "quitter", TournamentMenuController())
         if tournament.rounds:
-            self.menu.add("auto", "ajouter les points", UpdatePointController())
+            self.menu.add("auto", "ajouter les points",
+                          UpdatePointController())
             self.menu.add("auto", "nouveau round", NextRoundController())
-            self.menu.add("auto", "sauvegarder la partie", SaveGameController())
+            self.menu.add("auto", "sauvegarder la partie",
+                          SaveGameController())
             self.menu.add("auto", "quitter", TournamentMenuController())
         user_choice = self.view.get_user_choice()
 
@@ -106,5 +114,4 @@ class SaveGameController:
     def __call__(self, store):
         tournament = store["current_tournament"]
         self.save.save_tournaments(tournament)
-
-
+        return TournamentMenuController()

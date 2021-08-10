@@ -9,11 +9,8 @@ class Match:
         self.player1 = player1
         self.player2 = player2
         self.winner = None
-        self.start_date = None
-        self.end_date = None
-
-    def start_match(self):
         self.start_date = datetime.datetime.today()
+        self.end_date = None
 
     def end_match(self, winner):
         self.end_date = datetime.datetime.today()
@@ -30,22 +27,12 @@ class Match:
         return self.winner is not None
 
     def to_dict(self):
-        return {"player1": self.player1.identity, "player2": self.player2.identity,
-                "start_match": str(self.start_date), "end_match": str(self.end_date)}
+        return {"player1": self.player1.identity,
+                "player2": self.player2.identity,
+                "winner": self.winner,
+                "start_match": str(self.start_date)
+                if self.start_date else None,
+                "end_match": str(self.end_date) if self.end_date else None}
 
     def __repr__(self):
         return f" {self.player1} vs {self.player2} "
-
-
-
-
-
-
-
-
-
-
-
-
-
-
