@@ -32,7 +32,6 @@ class CreateTournamentController:
         self.save = TournamentData()
 
     def __call__(self, store):
-
         data = NewTournamentView.create_tournament()
         tournament = Tournament(**data)
         PlayerOptionView.display_players_list(store["players"])

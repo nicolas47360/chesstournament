@@ -3,7 +3,7 @@ class ReportView:
         self.menu = menu
 
     def _display_menu(self):
-        print("-------RAPPORT------\n")
+        print("\n-------RAPPORT------\n")
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
 

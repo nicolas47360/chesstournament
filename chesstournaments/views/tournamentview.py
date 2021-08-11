@@ -8,7 +8,7 @@ class TournamentView:
         self.menu = menu
 
     def _display_menu(self):
-        print("-------TOURNOI-------\n")
+        print("\n-------TOURNOI-------\n")
         for key, entry in self.menu.items():
             print(f"{key}: {entry.option}")
 
