@@ -47,7 +47,6 @@ class CreateTournamentController:
                     tournament.players.append(player)
         store["current_tournament"] = tournament
         self.save.save_tournaments(tournament)
-
         return TournamentMenuController()
 
 
@@ -57,7 +56,6 @@ class LoadTournamentController:
         NewTournamentView.display_tournament_list(store["tournaments"])
         tournament = NewTournamentView.choice_tournament(store["tournaments"])
         store["current_tournament"] = tournament
-
         return TournamentMenuController()
 
 
