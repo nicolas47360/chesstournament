@@ -4,6 +4,7 @@ from ..views.playerview import PlayerOptionView
 from ..utils.utilsanddata import TournamentData
 from ..utils.menu import Menu
 from ..models.tournament import Tournament
+from ..controllers.playercontroller import CreatePlayerController
 from . import appcontroller
 
 
@@ -32,6 +33,10 @@ class CreateTournamentController:
         self.save = TournamentData()
 
     def __call__(self, store):
+        if len(store["players"]) < 8:
+            NewTournamentView.player_not_in_db()
+            PlayerOptionView.display_players_list(store["players"])
+            return CreatePlayerController()
         data = NewTournamentView.create_tournament()
         tournament = Tournament(**data)
         PlayerOptionView.display_players_list(store["players"])

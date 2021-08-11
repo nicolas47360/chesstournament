@@ -24,7 +24,8 @@ class PlayerOptionView:
     @staticmethod
     def create_player():
         print("--------Nouveau joueur-------\n")
-        identity = Feature.for_int("entrer un chiffre: ")
+        identity = Feature.for_int("entrer un chiffre pour identifier "
+                                   "le joueur : ")
         last_name = Feature.for_string("Veuillez entrer le nom : ")
         first_name = Feature.for_string("Veuillez entrer votre prénom : ")
         birth_date = Feature.birth_date("veuillez entrer la date "

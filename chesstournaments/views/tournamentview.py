@@ -25,8 +25,6 @@ class NewTournamentView:
     @staticmethod
     def create_tournament():
         print("-------Création d'un tournoi-------\n")
-        print("Veuillez créer 8 joueurs avant de commencer "
-              "le tournoi si celà n'est pas fait\n")
         name = input("Veuillez entrer le nom du tournoi : ")
         location = input("Veuillez entrer le lieu du tournoi : ")
         dated = str(datetime.date.today())
@@ -41,6 +39,12 @@ class NewTournamentView:
         return {"name": name, "location": location,
                 "dated": dated, "time_control": time_control,
                 "round_number": round_number,  "description": description}
+
+    @staticmethod
+    def player_not_in_db():
+        print("\n Vous n'avez pas 8 joueurs pour commencer un tournoi "
+              "vous allez être rediriger vers la page de création "
+              "de joueur\n")
 
     @staticmethod
     def display_tournament_list(tournaments):
