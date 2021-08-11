@@ -103,7 +103,6 @@ class NextRoundController:
     def __call__(self, store):
         tournament = store["current_tournament"]
         tournament.next_round()
-
         return CurrentTournamentMenuController()
 
 

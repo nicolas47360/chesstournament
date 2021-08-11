@@ -8,12 +8,7 @@ class Round:
         self.matches = []
         self.name = name
         self.start_dated = start_dated
-        self.end_dated = None
-
-    def end_round(self):
         self.end_dated = datetime.datetime.today()
-        for match in self.matches:
-            self.matches.append(match)
 
     def start_round(self):
         self.start_dated = datetime.datetime.today()
@@ -29,5 +24,4 @@ class Round:
                 "end_round": str(self.end_dated) if self.end_dated else None}
 
     def __repr__(self):
-        return f" {self.name} {self.start_dated}  " \
-               f" {self.end_dated or 'pas encore fini'}"
+        return f" {self.name} {self.start_dated}  "

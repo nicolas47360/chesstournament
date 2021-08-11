@@ -25,7 +25,8 @@ class NewTournamentView:
     @staticmethod
     def create_tournament():
         print("-------Création d'un tournoi-------\n")
-
+        print("Veuillez créer 8 joueurs avant de commencer "
+              "le tournoi si celà n'est pas fait\n")
         name = input("Veuillez entrer le nom du tournoi : ")
         location = input("Veuillez entrer le lieu du tournoi : ")
         dated = str(datetime.date.today())
@@ -33,8 +34,8 @@ class NewTournamentView:
         time_control = Feature.time_control("Veuillez entrer "
                                             "le type de partie "
                                             "(split, blitz, rapide): ")
-        round_number = Feature.for_int("Veuillez entrer"
-                                       " le nombre de rondes : ")
+        round_number = 4
+        print("nombre de round: " + str(round_number))
         description = input("Veuillez entrer les informations : ")
 
         return {"name": name, "location": location,
@@ -85,7 +86,7 @@ class CurrentTournamentView:
             print(f"joueur {p + 1}: {players}")
         print("\n")
 
-        print("------rounds------")
+        print("------rounds------\n")
         if not tournament.rounds:
             print("Pas encore de round commencé")
         else:

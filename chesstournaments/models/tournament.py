@@ -33,22 +33,24 @@ class Tournament:
         self.rounds.append(tournament_round)
 
     def next_round(self):
-        next_round = Round(datetime.datetime.today(),
-                           name=f"round {len(self.rounds) +1}")
-        self.players.sort(key=lambda p: (p.score, p.ranking), reverse=True)
+        while len(self.rounds) < 4:
+            next_round = Round(datetime.datetime.today(),
+                               name=f"round {len(self.rounds) +1}")
+            self.players.sort(key=lambda p: (p.score, p.ranking), reverse=True)
 
-        available = [p for p in self.players]
-        while available:
-            current = available.pop(0)
-            for player in available:
-                if not self.has_played(current, player) or len(available) == 1:
-                    next_round.matches.append(Match(current, player))
-                    available = [i for i in available if i != player]
-                    break
-                else:
-                    continue
-        self.rounds.append(next_round)
-        return next_round
+            available = [p for p in self.players]
+            while available:
+                current = available.pop(0)
+                for player in available:
+                    if not self.has_played(current, player)\
+                            or len(available) == 1:
+                        next_round.matches.append(Match(current, player))
+                        available = [i for i in available if i != player]
+                        break
+                    else:
+                        continue
+            self.rounds.append(next_round)
+            return next_round
 
     def get_last_round(self):
         if self.rounds or len(self.rounds) == 4:

@@ -35,4 +35,4 @@ class Match:
                 "end_match": str(self.end_date) if self.end_date else None}
 
     def __repr__(self):
-        return f" {self.player1} vs {self.player2} "
+        return f" \n{self.player1} vs {self.player2} "
