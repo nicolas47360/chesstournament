@@ -39,6 +39,7 @@ Lancer le script:<br>
 4. Quitter
 
 #### Execution d'un Tournoi
+- *Commencer par créer au minimum huit joueurs avant de lancer le tournoi*
 - *Charger un tournoi par son nom.*
 - *Lancer le tournoi en séléctionant "tournoi en cours"*
 - *Commencer le "premier round" si vous venez de créer un tournoi ou "nouveau round" si vous reprennez un tournoi*
