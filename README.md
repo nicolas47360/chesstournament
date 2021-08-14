@@ -1,18 +1,18 @@
 # Chess Tournament
 
 ##Description
-Application permettant la création et la gestion d'un tournoi d'echec hors ligne selon le systéme suisse.
+Application permettant la création et la gestion d'un tournoi d'échec hors ligne selon le système suisse.
 ## Prérequis
 **Python 3**
 ## Installation:
 Cloner le repository à partir de l'adresse:
 https://github.com/nicolas47360/chesstournament.git
 
-Créer un environement virtuel:<br>
+Créer un environnement virtuel:<br>
 `python -m venv env`
 
 
-Activer votre environement virtuel:<br>
+Activer votre environnement virtuel:<br>
 `source env/bin/activate`
 
 Installer les packages à partir du fichier requirements.txt:<br>
@@ -24,7 +24,8 @@ Lancer le script:<br>
 ## Démarage
 ### Menu d'accueil
 1. Tournoi:<br>
-    *Vous permettra de créer un nouveau tournoi et de charger un tournoi après sa création ou si celui-ci fut sauvegarder.*
+    *Vous permettra de créer un nouveau tournoi et de charger un tournoi après sa création ou si celui-ci fut 
+sauvegardé.*
 
 
 2. Joueur:<br>
@@ -41,9 +42,9 @@ Lancer le script:<br>
 
 ### Execution d'un Tournoi
 - *Commencer par créer au minimum huit joueurs avant de lancer le tournoi
-ou vous pouvez utiliser le fichier `playersdemo.json` qu'il faudra renomer `players.json` pour pouvoir l'utiliser*
-- *Lancer le tournoi en séléctionant "tournoi en cours"*
-- *Commencer le "premier round" si vous venez de créer un tournoi ou "nouveau round" si vous reprennez un tournoi*
+ou vous pouvez utiliser le fichier `playersdemo.json` qu'il faudra renommer `players.json` pour pouvoir l'utiliser*
+- *Lancer le tournoi en sélectionnant "tournoi en cours"*
+- *Commencer le "premier round" si vous venez de créer un tournoi ou "nouveau round" si vous reprenez un tournoi*
 - *"Ajouter les points" lorsque les matchs sont finis*
 - *continuer les rounds ou sauvegarder*
 
