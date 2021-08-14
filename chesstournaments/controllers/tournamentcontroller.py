@@ -51,7 +51,6 @@ class CreateTournamentController:
 
 
 class LoadTournamentController:
-
     def __call__(self, store):
         NewTournamentView.display_tournament_list(store["tournaments"])
         tournament = NewTournamentView.choice_tournament(store["tournaments"])
@@ -74,10 +73,13 @@ class CurrentTournamentMenuController:
         if tournament.rounds:
             self.menu.add("auto", "ajouter les points",
                           UpdatePointController())
+
+        last_round = tournament.get_last_round()
+        if len(tournament.rounds) < 4 and last_round and last_round.finished():
             self.menu.add("auto", "nouveau round", NextRoundController())
-            self.menu.add("auto", "sauvegarder la partie",
-                          SaveGameController())
-            self.menu.add("auto", "quitter", TournamentMenuController())
+        self.menu.add("auto", "sauvegarder la partie",
+                      SaveGameController())
+        self.menu.add("auto", "quitter", TournamentMenuController())
         user_choice = self.view.get_user_choice()
 
         return user_choice.handler
@@ -91,7 +93,6 @@ class FirstRoundController:
 
 
 class UpdatePointController:
-
     def __call__(self, store):
         tournament_round = store["current_tournament"].get_last_round()
         wins_players = CurrentTournamentView.update_point(tournament_round)
@@ -101,7 +102,6 @@ class UpdatePointController:
 
 
 class NextRoundController:
-
     def __call__(self, store):
         tournament = store["current_tournament"]
         tournament.next_round()

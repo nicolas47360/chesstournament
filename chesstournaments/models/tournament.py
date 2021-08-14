@@ -33,7 +33,7 @@ class Tournament:
         self.rounds.append(tournament_round)
 
     def next_round(self):
-        while len(self.rounds) < 4:
+        if len(self.rounds) < 4:
             next_round = Round(datetime.datetime.today(),
                                name=f"round {len(self.rounds) +1}")
             self.players.sort(key=lambda p: (p.score, p.ranking), reverse=True)
@@ -55,8 +55,6 @@ class Tournament:
     def get_last_round(self):
         if self.rounds or len(self.rounds) == 4:
             tournament_round = self.rounds[-1]
-            if tournament_round.finished():
-                tournament_round = self.next_round()
             return tournament_round
 
     def has_played(self, player1, player2):
